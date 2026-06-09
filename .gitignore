@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.html  # Debug HTML files
+*.log   # Log files
+debug_*.py  # Debug scripts
+inspect_*.py
+check_*.py
+enhanced_*.py
+test_*.py
+
+# CSV and data (keep sample, exclude generated)
+# macspep_single_peptides.csv  # Uncomment to track sample output
+
+# Temporary files
+*.tmp
+*.temp
+failed_*.txt

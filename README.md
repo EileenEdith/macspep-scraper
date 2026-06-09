@@ -12,10 +12,10 @@ This scraper automates the collection of those fields and saves them into a clea
 
 The resulting dataset can be used to quickly check:
 
-- which peptide sequences are listed for a given antigen
-- which MHC allele is the main allele for each peptide
-- which additional MHC alleles are listed in the datasheet
-- where the original datasheet information came from
+- Which peptide sequences are listed for a given antigen
+- Which MHC allele is the main allele for each peptide
+- Which additional MHC alleles are listed in the datasheet
+- Where the original datasheet information came from
 
 > Note: This scraper organizes information reported in Miltenyi Biotec datasheets. It should not be interpreted as an independent experimental validation that every peptide binds under all conditions.
 
@@ -53,31 +53,46 @@ The current run collected:
 
 ### Setup
 
-bash git clone https://github.com/EileenEdith/macspep-scraper.git cd macspep-scraper pip install -r requirements.txt 
+```bash
+git clone https://github.com/EileenEdith/macspep-scraper.git
+cd macspep-scraper
+pip install -r requirements.txt
+```
 
 ## Usage
 
 Run the scraper with the default MACSpep Single Peptides page:
 
-bash python3 macspep_scraper.py 
+```bash
+python3 macspep_scraper.py
+```
 
 Run with a custom URL and output file:
 
-bash python3 macspep_scraper.py --url "https://..." --output "output.csv" 
+```bash
+python3 macspep_scraper.py --url "https://..." --output "output.csv"
+```
 
 Show available options:
 
-bash python3 macspep_scraper.py --help 
+```bash
+python3 macspep_scraper.py --help
+```
 
 ## Output Format
 
 The output CSV contains only the following columns:
 
-csv antigen,peptide_sequence,main_mhc_allele,further_mhc_alleles,datasheet_url 
+```csv
+antigen,peptide_sequence,main_mhc_allele,further_mhc_alleles,datasheet_url
+```
 
 Example:
 
-csv CEACAM1,NPVEDKDAVAF,HLA-B*35,"B*35:01, B*35:03",https://... CEACAM1,LPVSPRLQL,HLA-B*07,B*07:02,https://... 
+```csv
+CEACAM1,NPVEDKDAVAF,HLA-B*35,"B*35:01, B*35:03",https://...
+CEACAM1,LPVSPRLQL,HLA-B*07,B*07:02,https://...
+```
 
 ## Workflow
 
@@ -91,7 +106,8 @@ The scraper expands product group sections and collects individual MACSpep produ
 
 ### Phase 3: Process Allele Options
 
-For each product page, the scraper checks all available MHC allele options.  
+For each product page, the scraper checks all available MHC allele options.
+
 For every selected allele, it collects all visible datasheet links.
 
 ### Phase 4: Parse Datasheets
@@ -111,18 +127,18 @@ The extracted records are deduplicated and saved as a CSV file.
 
 The scraper reports key metrics during execution, including:
 
-- number of product groups processed
-- number of product URLs collected
-- number of allele options processed
-- number of datasheet URLs collected
-- number of PDFs successfully parsed
-- final CSV shape
+- Number of product groups processed
+- Number of product URLs collected
+- Number of allele options processed
+- Number of datasheet URLs collected
+- Number of PDFs successfully parsed
+- Final CSV shape
 
 The scraper also saves failure logs when applicable:
 
-- failed_product_urls.txt
-- failed_allele_cases.txt
-- failed_pdf_urls.txt
+- `failed_product_urls.txt`
+- `failed_allele_cases.txt`
+- `failed_pdf_urls.txt`
 
 ## Notes
 

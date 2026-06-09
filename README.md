@@ -1,119 +1,144 @@
 # MACSpep Single Peptides Scraper
 
-Miltenyi Biotec 웹사이트에서 MACSpep Single Peptides 데이터를 자동으로 수집하는 웹 스크래퍼입니다.
+A web scraper for collecting and organizing MACSpep Single Peptides data from the Miltenyi Biotec website.
 
-## 🎯 주요 기능
+This project was built to create a structured reference table of antigen–peptide–MHC allele combinations listed in MACSpep product datasheets. The final dataset makes it easier to browse peptide sequences by antigen and MHC allele without manually opening each product page and datasheet.
 
-- **자동 제품 로드**: "Load 25 More" 버튼 자동 클릭
-- **아코디언 확장**: 모든 제품 그룹 아코디언 자동 확장
-- **Allele 처리**: 각 제품의 모든 MHC allele 옵션 처리
-- **다중 Datasheet 수집**: 각 allele별 모든 데이터시트 수집
-- **PDF 파싱**: 각 데이터시트에서 다음 정보 추출:
+## Purpose
+
+MACSpep Single Peptides are listed across multiple product pages and datasheets. Each datasheet contains key information such as antigen name, peptide sequence, main MHC allele, and further compatible MHC alleles.
+
+This scraper automates the collection of those fields and saves them into a clean CSV file.
+
+The resulting dataset can be used to quickly check:
+
+- which peptide sequences are listed for a given antigen
+- which MHC allele is the main allele for each peptide
+- which additional MHC alleles are listed in the datasheet
+- where the original datasheet information came from
+
+> Note: This scraper organizes information reported in Miltenyi Biotec datasheets. It should not be interpreted as an independent experimental validation that every peptide binds under all conditions.
+
+## Features
+
+- Scrapes MACSpep Single Peptides from the Miltenyi Biotec website
+- Expands product groups and collects individual peptide product pages
+- Processes all available MHC allele options for each product page
+- Collects all visible datasheet links for each selected allele
+- Downloads and parses datasheet PDFs
+- Extracts the following fields:
   - Antigen
-  - Peptide Sequence
-  - Main MHC Allele
-  - Further MHC Alleles
-- **CSV 출력**: 정리된 데이터를 CSV로 저장
+  - Peptide sequence
+  - Main MHC allele
+  - Further MHC alleles
+- Deduplicates product and datasheet URLs
+- Saves the extracted data into a clean CSV file
+- Tracks failed products, allele cases, and PDF parsing errors
 
-## 📊 결과
+## Results
 
-- **310개 레코드** 수집
-- **74개 unique antigen**
-- **43개 unique MHC alleles**
-- **100% 데이터 완성도**
+The current run collected:
 
-## 🛠️ 설치
+- 310 records
+- 74 unique antigens
+- 43 unique MHC alleles
+- Complete values for the target fields in the final dataset
 
-### 필요 사항
+## Installation
+
+### Requirements
+
 - Python 3.7+
-- Chrome 브라우저
+- Google Chrome browser
 
-### 설정
+### Setup
 
-```bash
-# 저장소 클론
-git clone https://github.com/yourusername/macspep-scraper.git
-cd macspep-scraper
+bash git clone https://github.com/EileenEdith/macspep-scraper.git cd macspep-scraper pip install -r requirements.txt 
 
-# 의존성 설치
-pip install -r requirements.txt
-```
+## Usage
 
-## 🚀 사용법
+Run the scraper with the default MACSpep Single Peptides page:
 
-```bash
-# 기본 실행 (기본 URL 사용)
-python3 macspep_scraper.py
+bash python3 macspep_scraper.py 
 
-# 커스텀 URL 지정
-python3 macspep_scraper.py --url "https://..." --output "output.csv"
+Run with a custom URL and output file:
 
-# 옵션
-python3 macspep_scraper.py --help
-```
+bash python3 macspep_scraper.py --url "https://..." --output "output.csv" 
 
-## 📋 출력 CSV 구조
+Show available options:
 
-```
-antigen,peptide_sequence,main_mhc_allele,further_mhc_alleles,datasheet_url
-CEACAM1,NPVEDKDAVAF,HLA-B*35,"B*35:01, B*35:03",https://...
-CEACAM1,LPVSPRLQL,HLA-B*07,B*07:02,https://...
-...
-```
+bash python3 macspep_scraper.py --help 
 
-## 🔍 Workflow
+## Output Format
 
-### Phase 1: 제품 목록 로드
-- 리스팅 페이지 열기
-- "Load 25 More" 버튼 자동 클릭
-- 모든 제품이 로드될 때까지 반복
+The output CSV contains only the following columns:
 
-### Phase 2: 아코디언 확장 및 제품 링크 수집
-- 모든 제품 그룹 아코디언 확장
-- 각 아코디언 내 개별 제품 링크 수집
+csv antigen,peptide_sequence,main_mhc_allele,further_mhc_alleles,datasheet_url 
 
-### Phase 3: Allele 처리 및 Datasheet 수집
-- 각 제품 페이지 방문
-- "Select a allele" 버튼으로 모든 allele 옵션 처리
-- 각 allele별 모든 visible datasheet 링크 수집
+Example:
 
-### Phase 4: PDF 다운로드 및 파싱
-- 각 datasheet PDF 다운로드
-- PDF에서 필드 추출:
-  - Antigen
-  - Peptide Sequence
-  - Main MHC Allele
-  - Further MHC Alleles
+csv CEACAM1,NPVEDKDAVAF,HLA-B*35,"B*35:01, B*35:03",https://... CEACAM1,LPVSPRLQL,HLA-B*07,B*07:02,https://... 
 
-### Phase 5: CSV 저장
-- 추출된 데이터를 CSV로 정렬하여 저장
+## Workflow
 
-## 📊 로깅
+### Phase 1: Load Product Listing
 
-스크래퍼는 다음 메트릭을 자동으로 추적합니다:
+The scraper opens the MACSpep Single Peptides listing page and loads the available product groups.
 
-- Load 25 More 클릭 횟수
-- 확장된 제품 그룹 수
-- 수집된 제품 URL 수
-- 처리된 Allele 옵션 수
-- 수집된 Datasheet URL 수
-- 파싱된 PDF 수
-- 최종 CSV 크기
+### Phase 2: Collect Product Links
 
-## ⚠️ 주의사항
+The scraper expands product group sections and collects individual MACSpep product links.
 
-- 스크래퍼는 느릴 수 있습니다 (각 제품당 여러 allele 처리)
-- 대역폭 낭비를 피하기 위해 적절한 대기 시간을 포함합니다
-- 웹사이트 구조 변경 시 수정이 필요할 수 있습니다
+### Phase 3: Process Allele Options
 
-## 📝 라이선스
+For each product page, the scraper checks all available MHC allele options.  
+For every selected allele, it collects all visible datasheet links.
+
+### Phase 4: Parse Datasheets
+
+Each datasheet PDF is downloaded and parsed to extract:
+
+- Antigen
+- Peptide sequence
+- Main MHC allele
+- Further MHC alleles
+
+### Phase 5: Save CSV
+
+The extracted records are deduplicated and saved as a CSV file.
+
+## Logging
+
+The scraper reports key metrics during execution, including:
+
+- number of product groups processed
+- number of product URLs collected
+- number of allele options processed
+- number of datasheet URLs collected
+- number of PDFs successfully parsed
+- final CSV shape
+
+The scraper also saves failure logs when applicable:
+
+- failed_product_urls.txt
+- failed_allele_cases.txt
+- failed_pdf_urls.txt
+
+## Notes
+
+- The Miltenyi Biotec website is dynamically rendered, so Selenium is used to interact with product pages.
+- WebDriverWait is used to wait for dynamically loaded content.
+- Website structure changes may require updates to the scraper.
+- Please use the scraper responsibly and avoid excessive requests.
+
+## License
 
 MIT License
 
-## 👨‍💻 작성자
+## Author
 
 sbpark@target.re.kr
 
-## 🤝 기여
+## Contributions
 
-개선 사항이나 버그 리포트는 이슈를 통해 공유해주세요.
+Bug reports, suggestions, and improvements are welcome through GitHub Issues or Pull Requests.
